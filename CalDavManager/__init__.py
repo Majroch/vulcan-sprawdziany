@@ -5,6 +5,7 @@ import os
 from vulcan._exam import Exam, ExamType
 from vulcan._lesson import Lesson
 from vulcan._homework import Homework
+from pytz import timezone
 
 try:
     import vobject #pylint: disable=import-error
@@ -81,8 +82,8 @@ class CalDavManager:
 
         calendar.vevent.add('description').value = "Teacher: " + exam.teacher.name + "(" + exam.teacher.short + ")\n" + "Description: " + exam.description
 
-        calendar.vevent.add("dtstart").value = datetime.datetime(lesson.from_.year, lesson.from_.month, lesson.from_.day, lesson.from_.hour, lesson.from_.minute, lesson.from_.second)
-        calendar.vevent.add("dtend").value = datetime.datetime(lesson.to.year, lesson.to.month, lesson.to.day, lesson.to.hour, lesson.to.minute, lesson.to.second)
+        calendar.vevent.add("dtstart").value = timezone("Europe/Warsaw").localize(datetime.datetime(lesson.from_.year, lesson.from_.month, lesson.from_.day, lesson.from_.hour, lesson.from_.minute, lesson.from_.second))
+        calendar.vevent.add("dtend").value = timezone("Europe/Warsaw").localize(datetime.datetime(lesson.to.year, lesson.to.month, lesson.to.day, lesson.to.hour, lesson.to.minute, lesson.to.second))
         if exam.type == ExamType.EXAM:
             valarm = calendar.vevent.add('valarm')
             valarm.add('action').value = "AUDIO"
@@ -136,8 +137,8 @@ class CalDavManager:
 
         calendar.vevent.add('description').value = "Teacher: " + homework.teacher.name + "(" + homework.teacher.short + ")\n" + "Description: " + homework.description
 
-        calendar.vevent.add("dtstart").value = datetime.datetime(lesson.from_.year, lesson.from_.month, lesson.from_.day, lesson.from_.hour, lesson.from_.minute, lesson.from_.second)
-        calendar.vevent.add("dtend").value = datetime.datetime(lesson.to.year, lesson.to.month, lesson.to.day, lesson.to.hour, lesson.to.minute, lesson.to.second)
+        calendar.vevent.add("dtstart").value = timezone("Europe/Warsaw").localize(datetime.datetime(lesson.from_.year, lesson.from_.month, lesson.from_.day, lesson.from_.hour, lesson.from_.minute, lesson.from_.second))
+        calendar.vevent.add("dtend").value = timezone("Europe/Warsaw").localize(datetime.datetime(lesson.to.year, lesson.to.month, lesson.to.day, lesson.to.hour, lesson.to.minute, lesson.to.second))
         
         valarm = calendar.vevent.add('valarm')
         valarm.add('action').value = "AUDIO"
@@ -150,8 +151,8 @@ class CalDavManager:
 
     def sendEvent(self, event: vobject.icalendar.VCalendar2_0):
         cal = self._prepare_cal()
-        start = event.getSortedChildren()[0].getChildValue("dtstart") + datetime.timedelta(hours=2)
-        end = event.getSortedChildren()[0].getChildValue("dtend") + datetime.timedelta(hours=2)
+        start = event.getSortedChildren()[0].getChildValue("dtstart").astimezone(timezone("UTC"))
+        end = event.getSortedChildren()[0].getChildValue("dtend").astimezone(timezone("UTC"))
         search = cal.date_search(start, end)
         print(start, end)
         print(search)
