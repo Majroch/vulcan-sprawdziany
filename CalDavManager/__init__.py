@@ -232,18 +232,19 @@ class CalDavManager:
                     continue
             if not found:
                 continue
-            for myEvent in events:
-                myEvent = myEvent.getSortedChildren()[0]
-                # print("\n", myEvent, "\n")
-                # print("\n", tmpEvent.getChildValue("description"), "\n")
-                # print("\n", myEvent.getChildValue("description"), "\n")
-                try:
-                    if tmpEvent.getChildValue("description") == myEvent.getChildValue("description") and tmpEvent.getChildValue("summary") == myEvent.getChildValue("summary"):
-                        toDelete = False
-                    elif not "Teacher: " in tmpEvent.getChildValue("description"):
-                        toDelete = False
-                except:
-                    continue
-            if toDelete:
-                print("Removing:", calEvent)
-                calEvent.delete()
+            else:
+                for myEvent in events:
+                    myEvent = myEvent.getSortedChildren()[0]
+                    # print("\n", myEvent, "\n")
+                    # print("\n", tmpEvent.getChildValue("description"), "\n")
+                    # print("\n", myEvent.getChildValue("description"), "\n")
+                    try:
+                        if tmpEvent.getChildValue("description") == myEvent.getChildValue("description") and tmpEvent.getChildValue("summary") == myEvent.getChildValue("summary"):
+                            toDelete = False
+                        elif not "Teacher: " in tmpEvent.getChildValue("description"):
+                            toDelete = False
+                    except:
+                        continue
+                if toDelete:
+                    print("Removing:", calEvent)
+                    calEvent.delete()

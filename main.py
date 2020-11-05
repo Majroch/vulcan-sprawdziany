@@ -71,8 +71,6 @@ while True:
         if len(homework[1]) > 0:
             events.append(caldav.createHomeworkEvent(homework[0], homework[1][0]))
 
-    # print(events[0].getSortedChildren()[0].getChildValue("dstart"))
-
     for event in events:
         if event:
             if caldav.sendEvent(event):
